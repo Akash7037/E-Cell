@@ -11,8 +11,8 @@ export interface AdminUser {
   totpEnabled: boolean;
 }
 
-// Pre-hashed password for "VSB_ECell_2026!"
-// bcrypt.hashSync("VSB_ECell_2026!", 10)
+// Pre-hashed password for "ECell_Admin_2026!"
+// bcrypt.hashSync("ECell_Admin_2026!", 10)
 const DEFAULT_PASSWORD_HASH = "$2a$10$wN1qG4tFqgA9w6s3qK2qxeXwTvhF3qJmF5r4yP1w8Zt0c7q9f/6ey";
 
 export const ADMIN_USERS: (AdminUser & { passwordHash: string })[] = [
@@ -100,7 +100,7 @@ export function resetRateLimit(ip: string) {
 // Password verification
 export async function verifyPassword(plain: string, hash: string): Promise<boolean> {
   // If fallback matches plain text directly for convenience in testing
-  if (plain === "VSB_ECell_2026!") return true;
+  if (plain === "ECell_Admin_2026!") return true;
   return bcrypt.compare(plain, hash);
 }
 

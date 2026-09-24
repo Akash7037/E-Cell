@@ -3,170 +3,162 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo3DScene from "@/components/3d/Logo3DScene";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Sparkles, Menu, X, ArrowUpRight, FileText } from "lucide-react";
+import Button from "@/components/ui/Button";
 
-const NAV_LINKS = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Team", href: "/team" },
-  { name: "Events", href: "/events" },
-  { name: "Contact", href: "/contact" },
-];
+interface NavbarProps {
+  onOpenProspectus?: () => void;
+  onOpenPitch?: () => void;
+}
 
-export default function Navbar() {
+export default function Navbar({ onOpenProspectus, onOpenPitch }: NavbarProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 25);
+      setScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+  const navLinks = [
+    { label: "Overview", href: "/" },
+    { label: "Incubation", href: "/#incubation" },
+    { label: "Ventures", href: "/#ventures" },
+    { label: "Events", href: "/events" },
+    { label: "About", href: "/about" },
+    { label: "Team", href: "/team" },
+  ];
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "py-3 bg-[#F7F3E9]/90 backdrop-blur-md border-b border-[#121316]/10 shadow-[0_10px_30px_rgba(45,35,25,0.06)]"
-            : "py-5 bg-transparent border-b border-[#121316]/5"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-3.5 px-4 sm:px-8 flex justify-center ${
+          scrolled ? "translate-y-0" : "translate-y-2"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Brand with 3D Medallion (Hands Cradling Cap) */}
-          <Link
-            href="/"
-            className="group flex items-center gap-3.5 focus:outline-none"
-            data-cursor-text="Home"
-          >
-            <div className="relative flex items-center justify-center p-1 rounded-full bg-white shadow-sm border border-[#121316]/10 group-hover:border-[#82111E]/40 transition-colors">
-              <Logo3DScene variant="header" className="w-10 h-10 sm:w-11 sm:h-11" />
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-display font-extrabold text-lg sm:text-xl tracking-tight text-[#121316] group-hover:text-[#82111E] transition-colors">
-                  E-CELL
-                </span>
-                <span className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-mono tracking-widest uppercase bg-[#82111E]/10 border border-[#82111E]/20 text-[#82111E] rounded font-bold">
-                  VSBCETC
-                </span>
+        <div
+          className={`w-full max-w-6xl mx-auto flex items-center justify-between px-5 py-2.5 rounded-full transition-all duration-500 ${
+            scrolled
+              ? "bg-[#090A0F]/85 backdrop-blur-2xl border border-white/12 shadow-2xl shadow-cyan-950/20"
+              : "bg-[#090A0F]/50 backdrop-blur-xl border border-white/8"
+          }`}
+        >
+          {/* Brand Identity */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-indigo-600 p-[1px] flex items-center justify-center overflow-hidden shadow-md shadow-cyan-500/20">
+              <div className="w-full h-full bg-[#08090D] rounded-[7px] flex items-center justify-center font-bold text-sm tracking-tighter text-white group-hover:scale-105 transition-transform">
+                E<span className="text-cyan-400">C</span>
               </div>
-              <span className="text-[10px] tracking-wider uppercase text-[#58554F] font-medium">
-                Where Vision Meets Venture
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-base tracking-wider text-white flex items-center gap-1.5 font-display">
+                E-CELL
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping inline-block" />
+              </span>
+              <span className="text-[10px] tracking-widest text-cyan-400/80 font-mono -mt-1 uppercase">
+                Venture Cell
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-lg border border-[#121316]/10 shadow-sm">
-            {NAV_LINKS.map((link) => {
+          {/* Center Links (Desktop) */}
+          <nav className="hidden md:flex items-center gap-1 bg-white/[0.03] px-3 py-1 rounded-full border border-white/5">
+            {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
-                  key={link.name}
+                  key={link.label}
                   href={link.href}
-                  className={`relative px-4 py-1.5 text-xs uppercase tracking-wider font-semibold rounded-full transition-all duration-200 btn-glitch ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-300 ${
                     isActive
-                      ? "text-white bg-gradient-to-r from-[#82111E] to-[#9E1B28] shadow-[0_4px_12px_rgba(130,17,30,0.25)]"
-                      : "text-[#58554F] hover:text-[#121316] hover:bg-[#EFE8DC]/60"
+                      ? "text-cyan-400 bg-cyan-500/10 shadow-sm shadow-cyan-500/10"
+                      : "text-gray-300 hover:text-white hover:bg-white/[0.06]"
                   }`}
-                  data-cursor-text="Go"
                 >
-                  {link.name}
+                  {link.label}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Right Action & CTA */}
-          <div className="hidden lg:flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1 text-[11px] font-mono bg-white/70 border border-[#121316]/10 rounded-full text-[#58554F]">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-              <span>IIT Bombay NEC Track</span>
-            </div>
-
-            <Link
-              href="/contact"
-              className="btn-glitch group relative inline-flex items-center gap-1.5 px-5 py-2 text-xs uppercase tracking-widest font-bold text-white bg-gradient-to-r from-[#82111E] to-[#9E1B28] hover:from-[#9E1B28] hover:to-[#B82132] rounded-full border border-[#82111E]/30 shadow-[0_4px_15px_rgba(130,17,30,0.25)] transition-all duration-200"
-              data-cursor-text="Pitch"
-            >
-              <span>Apply for Incubation</span>
-              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
-          </div>
-
-          {/* Mobile Buttons */}
-          <div className="flex items-center gap-3 md:hidden">
-            <Link
-              href="/contact"
-              className="btn-glitch px-3 py-1.5 text-[11px] uppercase tracking-wider font-bold text-white bg-[#82111E] rounded-full"
-            >
-              Apply
-            </Link>
-
+          {/* Right Action Cluster */}
+          <div className="hidden sm:flex items-center gap-2.5">
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 text-[#121316] hover:text-[#82111E] focus:outline-none"
-              aria-label="Toggle navigation menu"
+              onClick={onOpenProspectus}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-colors cursor-pointer"
             >
-              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <FileText className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Prospectus</span>
             </button>
+
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={onOpenPitch}
+              icon={<ArrowUpRight className="w-3.5 h-3.5" />}
+            >
+              Pitch Startup
+            </Button>
           </div>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-gray-300 hover:text-white rounded-lg bg-white/[0.04] border border-white/10"
+            aria-label="Toggle Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </header>
 
-      {/* Mobile Menu Drawer */}
-      <div
-        className={`fixed inset-0 z-40 md:hidden bg-[#F7F3E9]/98 backdrop-blur-2xl transition-all duration-300 flex flex-col justify-between px-6 pt-24 pb-8 ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-      >
-        <div className="flex flex-col gap-6 pt-6">
-          <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono bg-white border border-[#121316]/10 rounded-full text-[#58554F] w-fit">
-            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-            <span>NEC IIT Bombay Partner</span>
+      {/* Mobile Slide-down Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-x-4 top-20 z-50 md:hidden bg-[#0A0C14]/95 backdrop-blur-2xl border border-white/15 rounded-2xl p-5 shadow-2xl flex flex-col gap-3">
+          <div className="flex flex-col gap-1 pb-3 border-b border-white/10">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-2.5 rounded-xl text-sm font-medium text-gray-200 hover:text-cyan-400 hover:bg-white/[0.05] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
-          <nav className="flex flex-col gap-3">
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className={`text-2xl font-display font-bold py-2 border-b border-[#121316]/10 flex items-center justify-between ${
-                    isActive ? "text-[#82111E]" : "text-[#121316]"
-                  }`}
-                >
-                  <span>{link.name}</span>
-                  <ArrowUpRight className="w-5 h-5 opacity-50" />
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
+          <div className="flex flex-col gap-2 pt-1">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenProspectus?.();
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold text-gray-200 bg-white/[0.06] border border-white/10"
+            >
+              <FileText className="w-4 h-4 text-cyan-400" />
+              Download 2026 Prospectus
+            </button>
 
-        <div className="space-y-4 pt-6 border-t border-[#121316]/10">
-          <Link
-            href="/contact"
-            className="w-full block py-3.5 text-center text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#82111E] to-[#9E1B28] rounded-xl shadow-lg btn-glitch"
-          >
-            Apply for Incubation
-          </Link>
-          <div className="text-center text-xs text-[#58554F]">
-            VSB College of Engineering Technical Campus • Autonomous
+            <Button
+              size="md"
+              variant="primary"
+              className="w-full justify-center"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenPitch?.();
+              }}
+              icon={<ArrowUpRight className="w-4 h-4" />}
+            >
+              Pitch Your Startup
+            </Button>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

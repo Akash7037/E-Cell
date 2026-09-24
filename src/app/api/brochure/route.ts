@@ -1,21 +1,44 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
 export async function GET() {
-  const filePath = path.join(process.cwd(), "public", "brochures", "INNOVATEX_2026_Brochure.pdf");
+  const prospectusData = {
+    title: "E-CELL 2026 FOUNDER PROSPECTUS",
+    organization: "Entrepreneurship & Venture Cell",
+    cohort: "2026 - 2027",
+    pillars: [
+      {
+        name: "Pre-Seed Prototyping Capital",
+        grant: "Up to ₹5,00,000 non-dilutive grant",
+        milestones: "3 tranches based on technical validation",
+      },
+      {
+        name: "DeepTech Prototyping Sandbox",
+        facilities: "3D printing, PCB milling, GPU workstations, Oscilloscopes",
+        access: "24/7 keycard access for incubated teams",
+      },
+      {
+        name: "Patent & Intellectual Property Advisory",
+        support: "Institutional funding for prior-art search & patent filing",
+        trackRecord: "22 patents filed to date",
+      },
+      {
+        name: "Angel Syndicate & VC Demo Day",
+        network: "40+ active angels & micro-VC partners",
+        investmentPool: "Up to ₹50,00,000 syndicated seed allocation",
+      },
+    ],
+    timeline: {
+      applicationsOpen: "OCTOBER 01, 2026",
+      earlyDeadline: "OCTOBER 15, 2026",
+      cohortInduction: "NOVEMBER 01, 2026",
+      demoDay: "FEBRUARY 20, 2027",
+    },
+    inquiries: "ventures@ecell.org",
+  };
 
-  if (!fs.existsSync(filePath)) {
-    return new NextResponse("Brochure not found", { status: 404 });
-  }
-
-  const fileBuffer = fs.readFileSync(filePath);
-
-  return new NextResponse(fileBuffer, {
+  return NextResponse.json(prospectusData, {
     status: 200,
     headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": 'attachment; filename="VSBCETC_ECELL_INNOVATEX_2026_BROCHURE.pdf"',
       "Cache-Control": "public, max-age=3600",
     },
   });

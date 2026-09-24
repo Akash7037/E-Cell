@@ -1,413 +1,532 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import Logo3DScene from "@/components/3d/Logo3DScene";
-import { initialEvents } from "@/lib/data";
 import {
-  ArrowRight,
+  ArrowUpRight,
   Sparkles,
-  Calendar,
-  MapPin,
-  Clock,
-  TrendingUp,
+  Zap,
+  Shield,
   Cpu,
-  ShieldCheck,
-  Flame,
-  Download,
+  TrendingUp,
+  FileText,
+  Calendar,
   Users,
+  Compass,
+  CheckCircle,
+  ExternalLink,
+  ChevronRight,
   Award,
 } from "lucide-react";
+import Button from "@/components/ui/Button";
+import { INITIAL_STARTUPS, INITIAL_EVENTS, INITIAL_GALLERY, IncubatedStartup } from "@/lib/data";
+import ProspectusModal from "@/components/ui/ProspectusModal";
+import PitchModal from "@/components/ui/PitchModal";
 
 export default function HomePage() {
-  const currentEvent = initialEvents[0]; // INNOVATEX 2026
+  const [selectedSector, setSelectedSector] = useState<string>("All");
+  const [activeStartup, setActiveStartup] = useState<IncubatedStartup | null>(null);
+  const [prospectusOpen, setProspectusOpen] = useState(false);
+  const [pitchOpen, setPitchOpen] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState({
-    days: 24,
-    hours: 8,
-    minutes: 42,
-    seconds: 19,
-  });
+  const sectors = ["All", "DeepTech / AI", "CleanTech & EV", "CyberSecurity", "AgriTech", "FinTech / SaaS"];
 
-  useEffect(() => {
-    const targetDate = new Date("2026-10-18T09:00:00").getTime();
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance < 0) {
-        clearInterval(timer);
-        return;
-      }
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const filteredStartups =
+    selectedSector === "All"
+      ? INITIAL_STARTUPS
+      : INITIAL_STARTUPS.filter((s) => s.sector === selectedSector);
 
   return (
-    <div className="relative pt-24 pb-20 overflow-hidden text-[#121316]">
-      {/* 1. HERO SECTION WITH AUTHENTIC PHOTO BACKGROUND & 3D MEDALLION */}
-      <section className="relative min-h-[88vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center overflow-hidden">
-        {/* Cinematic Atmospheric Photo Backdrop (Tinted with Warm Beige) */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <Image
-            src="/photos/stage_team_full.webp"
-            alt="VSBCETC Innovation Ecosystem Background"
-            fill
-            className="object-cover opacity-15 filter grayscale contrast-125 scale-105"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F7F3E9] via-[#F7F3E9]/80 to-[#F7F3E9]" />
+    <div className="flex flex-col gap-24 sm:gap-32 pt-28 sm:pt-36 pb-24 overflow-hidden">
+      {/* ------------------------------------------------------------- */}
+      {/* 1. HERO SECTION */}
+      {/* ------------------------------------------------------------- */}
+      <section className="relative max-w-6xl mx-auto px-4 sm:px-8 text-center flex flex-col items-center">
+        {/* Live Cohort Pill Badge */}
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/25 text-cyan-300 text-xs font-mono tracking-wide mb-8 backdrop-blur-md shadow-sm shadow-cyan-500/10 animate-fade-in">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <span>COHORT 2026 ACTIVE • SEED GRANTS UP TO ₹5,00,000</span>
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
-          {/* Institutional Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/80 border border-[#121316]/10 text-[#58554F] text-xs font-mono uppercase tracking-widest mb-6 shadow-xs backdrop-blur-md"
-          >
-            <span className="w-2 h-2 rounded-full bg-[#82111E] animate-ping" />
-            <span className="font-semibold text-[#121316]">VSB College of Engineering Technical Campus</span>
-            <span className="text-[#8A857C] hidden sm:inline">• Autonomous Coimbatore</span>
-          </motion.div>
-
-          {/* Interactive 3D Emblem (Hands Holding Cap in the Air) */}
-          <motion.div
-            initial={{ scale: 0.85, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="relative my-2"
-          >
-            <Logo3DScene variant="hero" />
-
-            {/* Orbiting micro tags */}
-            <div className="hidden sm:block absolute -top-1 -left-10 px-3.5 py-1 text-[11px] font-mono bg-white/90 border border-[#82111E]/20 rounded-full text-[#82111E] font-bold shadow-md">
-              IIT Bombay NEC
-            </div>
-            <div className="hidden sm:block absolute -bottom-1 -right-10 px-3.5 py-1 text-[11px] font-mono bg-white/90 border border-[#D48B28]/30 rounded-full text-[#D48B28] font-bold shadow-md">
-              Autonomous Incubation
-            </div>
-          </motion.div>
-
-          {/* Slogan & Editorial Headlines */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-4 mt-3"
-          >
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display tracking-tight text-[#121316] uppercase leading-[0.95]">
-              Where Vision <br />
-              <span className="bg-gradient-to-r from-[#82111E] via-[#9E1B28] to-[#D48B28] bg-clip-text text-transparent">
-                Meets Venture
-              </span>
-            </h1>
-
-            <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-[#58554F] font-light leading-relaxed">
-              The premier student venture launchpad at VSBCETC Coimbatore. We convert collegiate research breakthroughs into scalable, venture-backed enterprises.
-            </p>
-          </motion.div>
-
-          {/* Action Buttons with Glitch Effect on Press */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-4 mt-8"
-          >
-            <Link
-              href="/events"
-              className="btn-glitch group px-8 py-3.5 rounded-full bg-gradient-to-r from-[#82111E] to-[#9E1B28] hover:from-[#9E1B28] hover:to-[#B82132] text-white font-bold text-xs uppercase tracking-widest shadow-md transition-all duration-200 flex items-center gap-2"
-              data-cursor-text="Event"
-            >
-              <span>Explore INNOVATEX 2026</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-
-            <Link
-              href="/team"
-              className="btn-glitch px-8 py-3.5 rounded-full bg-white hover:bg-[#FAF6F0] border border-[#121316]/15 text-[#121316] font-bold text-xs uppercase tracking-widest shadow-xs transition-all duration-200"
-              data-cursor-text="Team"
-            >
-              Meet The 20 Leads
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 2. KINETIC MARQUEE BANNER */}
-      <section className="relative my-8 py-3.5 bg-[#82111E] text-white border-y border-[#82111E] overflow-hidden select-none shadow-sm">
-        <div className="flex whitespace-nowrap animate-[marquee_24s_linear_infinite]">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="flex items-center gap-8 mx-4 text-xs sm:text-sm font-mono uppercase tracking-[0.25em] font-semibold">
-              <span className="text-[#F7F3E9]">IDEAS TODAY, IMPACT TOMORROW</span>
-              <span>•</span>
-              <span className="text-[#F5D061]">VSBCETC COIMBATORE</span>
-              <span>•</span>
-              <span>WHERE VISION MEETS VENTURE</span>
-              <span>•</span>
-              <span className="text-[#F5D061]">NATIONAL ENTREPRENEURSHIP CHALLENGE IIT BOMBAY</span>
-              <span>•</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. CURRENT EVENT TEASER (INNOVATEX 2026) WITH ATMOSPHERIC LAB BACKDROP */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="relative rounded-3xl p-6 sm:p-10 lg:p-14 bg-white border border-[#121316]/10 shadow-[0_15px_45px_rgba(70,55,35,0.08)] overflow-hidden">
-          {/* Background Workshop Photo Texture */}
-          <div className="absolute inset-0 pointer-events-none opacity-5">
-            <Image
-              src="/photos/workshop_1.webp"
-              alt="Lab Session Texture"
-              fill
-              className="object-cover"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="px-3.5 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-[#82111E] text-white">
-                  Spotlight Event
-                </span>
-                <span className="flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-mono bg-[#FAF6F0] border border-[#121316]/10 text-[#82111E] font-semibold">
-                  <Flame className="w-3.5 h-3.5 text-[#D48B28]" />
-                  Prize Pool: {currentEvent.prizePool}
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-[#121316] uppercase">
-                  {currentEvent.title}
-                </h2>
-                <p className="text-sm sm:text-base font-mono text-[#82111E] font-bold">
-                  {currentEvent.subtitle}
-                </p>
-              </div>
-
-              <p className="text-sm sm:text-base text-[#58554F] leading-relaxed">
-                {currentEvent.description}
-              </p>
-
-              {/* Coordinates */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#58554F] font-mono">
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#FAF6F0] border border-[#121316]/5">
-                  <Calendar className="w-4 h-4 text-[#82111E]" />
-                  <span>October 18, 2026</span>
-                </div>
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#FAF6F0] border border-[#121316]/5">
-                  <Clock className="w-4 h-4 text-[#D48B28]" />
-                  <span>09:00 AM - 06:00 PM IST</span>
-                </div>
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#FAF6F0] border border-[#121316]/5 sm:col-span-2">
-                  <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="truncate">Auditorium & Innovation Hub, VSBCETC</span>
-                </div>
-              </div>
-
-              {/* Live Countdown Grid */}
-              <div className="space-y-2 pt-1">
-                <div className="text-[11px] font-mono text-[#8A857C] uppercase tracking-widest font-semibold">
-                  Registration Window Closes In
-                </div>
-                <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-md">
-                  {[
-                    { label: "Days", val: timeLeft.days },
-                    { label: "Hours", val: timeLeft.hours },
-                    { label: "Minutes", val: timeLeft.minutes },
-                    { label: "Seconds", val: timeLeft.seconds },
-                  ].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#F7F3E9] border border-[#121316]/10"
-                    >
-                      <span className="text-xl sm:text-2xl font-black font-display text-[#121316]">
-                        {String(item.val).padStart(2, "0")}
-                      </span>
-                      <span className="text-[9px] uppercase tracking-wider text-[#58554F] font-mono font-medium">
-                        {item.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-3">
-                <Link
-                  href="/events"
-                  className="btn-glitch px-7 py-3 rounded-full bg-[#82111E] hover:bg-[#9E1B28] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
-                  data-cursor-text="Pitch"
-                >
-                  Register Prototype
-                </Link>
-
-                <a
-                  href="/api/brochure"
-                  download="VSBCETC_ECELL_INNOVATEX_2026.pdf"
-                  className="btn-glitch inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#FAF6F0] hover:bg-white border border-[#121316]/15 text-[#121316] font-bold text-xs uppercase tracking-wider transition-colors"
-                  data-cursor-text="PDF"
-                >
-                  <Download className="w-3.5 h-3.5 text-[#D48B28]" />
-                  <span>Download Brochure</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Right Photo Background Card */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#121316]/10 shadow-lg group">
-                <Image
-                  src="/photos/stage_team_core.webp"
-                  alt="VSB College of Engineering Technical Campus E-Cell Leaders in Cream Polos"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#121316]/90 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-white/90 backdrop-blur-md border border-[#121316]/10 text-xs text-[#121316]">
-                  <div className="font-bold">E-Cell Student Leadership Council</div>
-                  <div className="text-[11px] text-[#82111E] font-mono">VSBCETC Autonomous Coimbatore</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. PERFORMANCE & IMPACT METRICS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          {[
-            { metric: "50+", label: "Ventures Incubated", desc: "Hardware & Software Student Startups" },
-            { metric: "INR 15L+", label: "Grants & Seed Funding", desc: "Non-dilutive capital unlocked" },
-            { metric: "Top 10", label: "IIT Bombay NEC Track", desc: "Pan-India college entrepreneur ranking" },
-            { metric: "500+", label: "Active Innovators", desc: "Cross-engineering student network" },
-          ].map((stat, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-2xl bg-white border border-[#121316]/10 shadow-xs hover:border-[#82111E]/40 transition-all"
-            >
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-black font-display text-[#82111E]">
-                {stat.metric}
-              </div>
-              <div className="text-sm font-bold text-[#121316] mt-2 font-display">{stat.label}</div>
-              <div className="text-xs text-[#58554F] mt-1 font-body leading-relaxed">{stat.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. FOUR CORE INCUBATION PILLARS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
-          <span className="text-xs font-mono text-[#82111E] uppercase tracking-[0.25em] font-semibold">
-            Incubation Architecture
+        {/* Headline with tight typography tracking */}
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white font-display uppercase leading-[1.05] max-w-5xl">
+          Where Student Innovators Become{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-cyan-200">
+            Venture Founders
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black font-display tracking-tight text-[#121316] uppercase">
-            From Dorm Room Napkin <br />
-            To Series Seed
-          </h2>
-          <p className="text-sm sm:text-base text-[#58554F] leading-relaxed">
-            Our structured 4-phase acceleration roadmap empowers student innovators to validate, protect intellectual property, build deployable MVPs, and pitch to institutional capital.
+        </h1>
+
+        {/* Editorial Subtitle */}
+        <p className="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-normal leading-relaxed">
+          The autonomous student venture incubator & launchpad. We turn dorm-room engineering breakthroughs into venture-backed technology companies.
+        </p>
+
+        {/* Action Button Cluster */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <Button
+            size="lg"
+            variant="primary"
+            onClick={() => setPitchOpen(true)}
+            icon={<ArrowUpRight className="w-4 h-4" />}
+          >
+            Apply for Incubation
+          </Button>
+
+          <Button
+            size="lg"
+            variant="secondary"
+            onClick={() => setProspectusOpen(true)}
+            icon={<FileText className="w-4 h-4 text-cyan-400" />}
+          >
+            2026 Prospectus
+          </Button>
+        </div>
+
+        {/* Live Metrics Ticker */}
+        <div className="mt-16 sm:mt-24 w-full grid grid-cols-2 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-3xl bg-white/[0.02] border border-white/8 backdrop-blur-xl">
+          <div className="flex flex-col items-center p-3">
+            <span className="text-2xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-300 font-display">
+              ₹4.5 Cr+
+            </span>
+            <span className="text-xs uppercase tracking-wider text-gray-400 font-mono mt-1">
+              Seed Capital Raised
+            </span>
+          </div>
+
+          <div className="flex flex-col items-center p-3 border-l border-white/5">
+            <span className="text-2xl sm:text-4xl font-extrabold text-white font-display">
+              48+
+            </span>
+            <span className="text-xs uppercase tracking-wider text-gray-400 font-mono mt-1">
+              Startups Incubated
+            </span>
+          </div>
+
+          <div className="flex flex-col items-center p-3 border-t md:border-t-0 md:border-l border-white/5">
+            <span className="text-2xl sm:text-4xl font-extrabold text-cyan-300 font-display">
+              140+
+            </span>
+            <span className="text-xs uppercase tracking-wider text-gray-400 font-mono mt-1">
+              Mentors & Angels
+            </span>
+          </div>
+
+          <div className="flex flex-col items-center p-3 border-t md:border-t-0 md:border-l border-white/5">
+            <span className="text-2xl sm:text-4xl font-extrabold text-emerald-400 font-display">
+              22
+            </span>
+            <span className="text-xs uppercase tracking-wider text-gray-400 font-mono mt-1">
+              Patents Filed
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 2. ECOSYSTEM BENTO MATRIX */}
+      {/* ------------------------------------------------------------- */}
+      <section id="incubation" className="max-w-6xl mx-auto px-4 sm:px-8 w-full">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest mb-2">
+              <Zap className="w-3.5 h-3.5" />
+              <span>Full-Stack Founder Support</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-display uppercase">
+              The Incubation Engine
+            </h2>
+          </div>
+          <p className="text-gray-400 text-sm max-w-sm">
+            Everything an ambitious student team needs to transition from prototype to market-ready venture.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            {
-              icon: Sparkles,
-              num: "01",
-              title: "Problem Discovery & Validation",
-              desc: "Deep customer interviews, business model stress-testing, and market-size estimation with proven lean frameworks.",
-            },
-            {
-              icon: Cpu,
-              num: "02",
-              title: "Rapid Prototyping Lab",
-              desc: "Access to state-of-the-art AI compute rigs, IoT bench hardware, and autonomous software development sandboxes.",
-            },
-            {
-              icon: ShieldCheck,
-              num: "03",
-              title: "Patent & IP Desk",
-              desc: "Full institutional backing for provisional patent filing, trademark protection, and research transfer protocols.",
-            },
-            {
-              icon: TrendingUp,
-              num: "04",
-              title: "Venture Capital Syndication",
-              desc: "Direct pitch coliseum access to Tamil Nadu startup funds, angel investors, and pan-India venture networks.",
-            },
-          ].map((pillar, idx) => (
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Card 1: Seed Capital (Large) */}
+          <div className="md:col-span-2 p-8 rounded-3xl bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-cyan-500/40 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+                <Zap className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider">
+                NON-DILUTIVE SEED CAPITAL
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white font-display mt-2 mb-3">
+                Pre-Seed Prototyping Grants
+              </h3>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-xl">
+                Direct equity-free financial grants up to ₹5,00,000 per startup. Zero equity taken during early campus incubation, allowing student founders to retain maximum cap table control.
+              </p>
+            </div>
+            <div className="mt-8 pt-6 border-t border-white/8 flex flex-wrap items-center gap-4 text-xs font-mono text-gray-400">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-cyan-400" /> Milestone-based Tranches
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-cyan-400" /> Hardware Bill-of-Materials
+              </span>
+            </div>
+          </div>
+
+          {/* Card 2: DeepTech Prototyping Sandbox */}
+          <div className="p-8 rounded-3xl bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-indigo-500/40 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+                <Cpu className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono text-indigo-400 uppercase tracking-wider">
+                HARDWARE & AI INFRASTRUCTURE
+              </span>
+              <h3 className="text-xl sm:text-2xl font-bold text-white font-display mt-2 mb-3">
+                24/7 Prototyping Lab
+              </h3>
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
+                Industrial stereolithography 3D printers, CNC milling benches, GPU compute workstations, and dedicated oscilloscope diagnostic benches.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/8 text-xs text-indigo-300/80 font-mono">
+              High-Speed Fiber & Dedicated Benches
+            </div>
+          </div>
+
+          {/* Card 3: Patent & IP Support */}
+          <div className="p-8 rounded-3xl bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
+                <Shield className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
+                INTELLECTUAL PROPERTY
+              </span>
+              <h3 className="text-xl sm:text-2xl font-bold text-white font-display mt-2 mb-3">
+                Zero-Cost Patent Filing
+              </h3>
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
+                Complete institutional funding for provisional patent drafting, prior-art searches, and Private Limited company incorporation.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/8 text-xs text-emerald-300/80 font-mono">
+              22 Patents Filed to Date
+            </div>
+          </div>
+
+          {/* Card 4: Angel Syndicate (Large) */}
+          <div className="md:col-span-2 p-8 rounded-3xl bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/10 hover:border-cyan-500/40 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+              <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider">
+                ANGEL INVESTOR NETWORK
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white font-display mt-2 mb-3">
+                Bi-Annual Pitch Tank & Syndicate
+              </h3>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-xl">
+                Demo Days attended by 40+ active angel syndicates, institutional micro-VCs, and alumnus tech executives. Pitch directly for seed commitments up to ₹50,00,000.
+              </p>
+            </div>
+            <div className="mt-8 pt-6 border-t border-white/8 flex flex-wrap items-center gap-4 text-xs font-mono text-gray-400">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-cyan-400" /> Standardized SAFE Notes
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle className="w-4 h-4 text-cyan-400" /> $100k AWS / GCP Credits
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 3. INCUBATED STARTUPS SHOWCASE */}
+      {/* ------------------------------------------------------------- */}
+      <section id="ventures" className="max-w-6xl mx-auto px-4 sm:px-8 w-full">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest mb-2">
+              <Award className="w-3.5 h-3.5" />
+              <span>Cohort Portfolio</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-display uppercase">
+              Incubated Startups
+            </h2>
+          </div>
+
+          {/* Sector Filters */}
+          <div className="flex flex-wrap items-center gap-1.5 bg-white/[0.02] p-1.5 rounded-2xl border border-white/8">
+            {sectors.map((sec) => (
+              <button
+                key={sec}
+                onClick={() => setSelectedSector(sec)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                  selectedSector === sec
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                    : "text-gray-400 hover:text-white hover:bg-white/[0.04]"
+                }`}
+              >
+                {sec}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Startups Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredStartups.map((startup) => (
             <div
-              key={idx}
-              className="group p-8 rounded-3xl bg-white border border-[#121316]/10 hover:border-[#82111E]/50 transition-all duration-300 relative overflow-hidden flex flex-col justify-between shadow-xs"
+              key={startup.id}
+              onClick={() => setActiveStartup(startup)}
+              className="p-6 rounded-3xl bg-white/[0.03] border border-white/8 hover:border-cyan-500/40 hover:bg-white/[0.05] transition-all duration-300 flex flex-col justify-between cursor-pointer group"
             >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-[#82111E]/10 border border-[#82111E]/20 flex items-center justify-center text-[#82111E] group-hover:scale-110 transition-transform">
-                    <pillar.icon className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono text-xs text-[#8A857C] font-bold group-hover:text-[#82111E] transition-colors">
-                    {pillar.num}
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-4">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    {startup.sector}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                    {startup.stage}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold font-display text-[#121316] group-hover:text-[#82111E] transition-colors">
-                  {pillar.title}
-                </h3>
-                <p className="text-xs text-[#58554F] leading-relaxed font-body">
-                  {pillar.desc}
+
+                <h4 className="text-xl font-bold text-white font-display group-hover:text-cyan-400 transition-colors">
+                  {startup.name}
+                </h4>
+                <p className="text-xs text-gray-400 mt-1.5 line-clamp-2 leading-relaxed">
+                  {startup.tagline}
                 </p>
+
+                <div className="mt-4 p-3 rounded-xl bg-black/30 border border-white/5 flex items-center justify-between">
+                  <span className="text-[11px] text-gray-400">Funding / Grant:</span>
+                  <span className="text-xs font-mono font-semibold text-emerald-400">
+                    {startup.funding}
+                  </span>
+                </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[#121316]/5 flex items-center gap-1.5 text-[11px] font-mono text-[#82111E] font-semibold">
-                <span>Phase {pillar.num} Roadmap</span>
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              <div className="mt-6 pt-4 border-t border-white/8 flex items-center justify-between text-xs text-gray-400">
+                <span>By {startup.founders.join(", ")}</span>
+                <span className="text-cyan-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform font-medium">
+                  Deep Dive <ChevronRight className="w-3.5 h-3.5" />
+                </span>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 6. CALL TO ACTION PORTAL */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="rounded-3xl p-8 sm:p-12 bg-[#FAF6F0] border border-[#121316]/10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
-          <div className="space-y-2 text-center md:text-left">
-            <h3 className="text-2xl sm:text-3xl font-black font-display text-[#121316] uppercase">
-              Ready to turn your prototype into an enterprise?
-            </h3>
-            <p className="text-xs sm:text-sm text-[#58554F] font-light">
-              Connect with faculty mentors, access lab grants, and collaborate with student co-founders.
+      {/* ------------------------------------------------------------- */}
+      {/* 4. REAL WORKSHOP & CAMPUS PHOTO GALLERY */}
+      {/* ------------------------------------------------------------- */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 w-full">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest mb-2">
+              <Compass className="w-3.5 h-3.5" />
+              <span>Campus Ecosystem</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-display uppercase">
+              Innovation in Action
+            </h2>
+          </div>
+          <p className="text-gray-400 text-sm max-w-sm">
+            Live impressions from our weekend product sprints, mentoring arenas, and annual conclaves.
+          </p>
+        </div>
+
+        {/* Gallery Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {INITIAL_GALLERY.map((item) => (
+            <div
+              key={item.id}
+              className="group relative rounded-3xl overflow-hidden bg-black/40 border border-white/8 aspect-[4/3] flex flex-col justify-end p-5 transition-transform duration-300 hover:border-cyan-500/40"
+            >
+              <Image
+                src={item.imageUrl}
+                alt={item.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-70 group-hover:opacity-90"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08090D] via-[#08090D]/40 to-transparent" />
+              <div className="relative z-10 space-y-1">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                  {item.category}
+                </span>
+                <h4 className="text-sm font-bold text-white font-display">{item.title}</h4>
+                <p className="text-[11px] text-gray-300 line-clamp-1">{item.caption}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 5. FLAGSHIP EVENTS SUMMARY */}
+      {/* ------------------------------------------------------------- */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 w-full">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest mb-2">
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Conclaves & Sprints</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-display uppercase">
+              Flagship Summits
+            </h2>
+          </div>
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-1.5 text-xs font-mono text-cyan-400 hover:text-cyan-300"
+          >
+            <span>View All Schedules</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {INITIAL_EVENTS.slice(0, 2).map((evt) => (
+            <div
+              key={evt.id}
+              className="relative p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/8 hover:border-cyan-500/30 transition-all flex flex-col justify-between group overflow-hidden"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    {evt.category}
+                  </span>
+                  <span className="text-gray-400">{evt.date}</span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl font-bold text-white font-display group-hover:text-cyan-400 transition-colors">
+                  {evt.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                  {evt.description}
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/8 flex items-center justify-between text-xs">
+                <span className="font-mono text-emerald-400 font-semibold">{evt.prizePool}</span>
+                <Link
+                  href="/events"
+                  className="inline-flex items-center gap-1 font-medium text-cyan-400 hover:text-white transition-colors"
+                >
+                  <span>Event Briefing</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 6. CALL TO ACTION: PITCH SUBMISSION */}
+      {/* ------------------------------------------------------------- */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 w-full">
+        <div className="relative p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-cyan-950/40 via-[#0A0C16] to-indigo-950/40 border border-cyan-500/25 overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-cyan-950/30">
+          <div className="max-w-xl space-y-4 text-center md:text-left">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>COHORT 2026 NOW SCREENING</span>
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white font-display tracking-tight uppercase">
+              Ready to Build Your Venture?
+            </h2>
+            <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+              Submit your startup deck or problem hypothesis. Accepted teams receive dedicated workspace, seed grants up to ₹5,00,000, and 1-on-1 angel advisory.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href="/team"
-              className="btn-glitch px-7 py-3 rounded-full bg-white hover:bg-[#F7F3E9] border border-[#121316]/15 text-[#121316] font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
+          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+            <Button
+              size="lg"
+              variant="primary"
+              onClick={() => setPitchOpen(true)}
+              icon={<ArrowUpRight className="w-4 h-4" />}
             >
-              Meet The Team
-            </Link>
-            <Link
-              href="/contact"
-              className="btn-glitch px-7 py-3 rounded-full bg-[#82111E] hover:bg-[#9E1B28] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
+              Submit Startup Pitch
+            </Button>
+            <Button
+              size="lg"
+              variant="secondary"
+              onClick={() => setProspectusOpen(true)}
+              icon={<FileText className="w-4 h-4 text-cyan-400" />}
             >
-              Apply For Incubation
-            </Link>
+              Get Prospectus
+            </Button>
           </div>
         </div>
       </section>
+
+      {/* Startup Deep Dive Modal */}
+      {activeStartup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-200">
+          <div
+            className="relative w-full max-w-2xl bg-[#0B0D16] border border-white/15 rounded-3xl p-6 sm:p-8 space-y-6 text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  {activeStartup.sector}
+                </span>
+                <h3 className="text-2xl font-bold font-display mt-2">{activeStartup.name}</h3>
+                <p className="text-xs text-gray-400 mt-1">{activeStartup.tagline}</p>
+              </div>
+              <button
+                onClick={() => setActiveStartup(null)}
+                className="p-1.5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/8">
+                <span className="text-gray-400 block mb-1">Seed Funding:</span>
+                <span className="font-mono text-emerald-400 font-bold text-sm">
+                  {activeStartup.funding}
+                </span>
+              </div>
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/8">
+                <span className="text-gray-400 block mb-1">Key Traction:</span>
+                <span className="font-mono text-cyan-300 font-semibold text-xs">
+                  {activeStartup.highlightMetric}
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2 text-xs text-gray-300">
+              <h5 className="font-semibold text-white uppercase tracking-wider font-mono text-[11px]">
+                Venture Overview
+              </h5>
+              <p className="leading-relaxed text-gray-400">{activeStartup.description}</p>
+            </div>
+
+            <div className="space-y-2 text-xs text-gray-300">
+              <h5 className="font-semibold text-white uppercase tracking-wider font-mono text-[11px]">
+                Demonstrated Traction
+              </h5>
+              <p className="leading-relaxed text-gray-400">{activeStartup.traction}</p>
+            </div>
+
+            <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+              <span className="text-gray-400">Founders: {activeStartup.founders.join(", ")}</span>
+              <Button size="sm" variant="secondary" onClick={() => setActiveStartup(null)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Global Modals */}
+      <ProspectusModal isOpen={prospectusOpen} onClose={() => setProspectusOpen(false)} />
+      <PitchModal isOpen={pitchOpen} onClose={() => setPitchOpen(false)} />
     </div>
   );
 }

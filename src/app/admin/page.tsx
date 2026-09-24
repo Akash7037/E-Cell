@@ -38,7 +38,7 @@ export default function AdminPage() {
 
   // Login Form
   const [email, setEmail] = useState("admin@vsbcetc.edu.in");
-  const [password, setPassword] = useState("VSB_ECell_2026!");
+  const [password, setPassword] = useState("ECell_Admin_2026!");
   const [totpCode, setTotpCode] = useState("");
   const [show2FA, setShow2FA] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -129,7 +129,7 @@ export default function AdminPage() {
 
   const handleAutofillDemo = () => {
     setEmail("admin@vsbcetc.edu.in");
-    setPassword("VSB_ECell_2026!");
+    setPassword("ECell_Admin_2026!");
     setTotpCode("728491");
   };
 
@@ -152,11 +152,11 @@ export default function AdminPage() {
       const newEvt: EventItem = {
         id: `evt-${Date.now()}`,
         title: editingEvent.title || "New Challenge",
-        subtitle: editingEvent.subtitle || "VSBCETC Innovation Initiative",
+        subtitle: editingEvent.subtitle || "E-Cell Innovation Initiative",
         category: (editingEvent.category as any) || "Workshop",
         date: editingEvent.date || new Date().toISOString().split("T")[0],
         time: editingEvent.time || "10:00 AM IST",
-        venue: editingEvent.venue || "Innovation Hub, VSBCETC",
+        venue: editingEvent.venue || "Innovation Sandbox Hub",
         isSpotlight: Boolean(editingEvent.isSpotlight),
         status: editingEvent.status || "Upcoming",
         description: editingEvent.description || "Description",
@@ -372,7 +372,7 @@ export default function AdminPage() {
             <div className="p-6 rounded-3xl bg-white border border-[#121316]/10 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-[#82111E] flex items-center justify-center text-white font-display font-black text-lg">
-                  VSB
+                  ECell
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -392,7 +392,7 @@ export default function AdminPage() {
               <div className="flex items-center gap-3">
                 <a
                   href="/api/brochure"
-                  download="VSBCETC_ECELL_INNOVATEX_2026.pdf"
+                  download="ECELL_FOUNDER_PROSPECTUS_2026.pdf"
                   className="btn-glitch px-4 py-2 rounded-full bg-[#FAF6F0] hover:bg-white border border-[#121316]/10 text-xs font-mono text-[#121316] flex items-center gap-1.5 transition-colors"
                 >
                   <Download className="w-3.5 h-3.5 text-[#D48B28]" />

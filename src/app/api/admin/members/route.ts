@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       year: sanitizeInput(data.year) || "Third Year",
       category: data.category || "Technology & AI",
       image: data.image || "/photos/members/member_tech.webp",
-      bio: sanitizeInput(data.bio) || "Leading innovation initiatives at E-Cell VSBCETC.",
+      bio: sanitizeInput(data.bio) || "Leading innovation initiatives at E-Cell ECellCETC.",
       contribution: sanitizeInput(data.contribution) || "Active contributor to campus incubator sprints.",
       skills: data.skills || ["Innovation", "Product Strategy"],
       socials: data.socials || { linkedin: "https://linkedin.com" },

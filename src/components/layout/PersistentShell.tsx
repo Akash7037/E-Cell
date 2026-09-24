@@ -1,83 +1,39 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import Lenis from "lenis";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import CustomCursor from "./CustomCursor";
-import AmbientBackground from "./AmbientBackground";
-import Preloader from "./Preloader";
+import React, { useState } from "react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import DynamicAmbientBackground from "@/components/layout/DynamicAmbientBackground";
+import SmoothScroll from "@/components/layout/SmoothScroll";
+import ProspectusModal from "@/components/ui/ProspectusModal";
+import PitchModal from "@/components/ui/PitchModal";
 
-export default function PersistentShell({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const pathname = usePathname();
-  const [isPreloaderDone, setIsPreloaderDone] = useState(false);
-
-  // Initialize Lenis smooth scroll
-  useEffect(() => {
-    // Check reduced motion preference
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 2,
-      infinite: false,
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    const rafId = requestAnimationFrame(raf);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
-  }, []);
+export default function PersistentShell({ children }: { children: React.ReactNode }) {
+  const [prospectusOpen, setProspectusOpen] = useState(false);
+  const [pitchOpen, setPitchOpen] = useState(false);
 
   return (
-    <>
-      {/* Draw-on stroke assembling preloader on initial visit */}
-      <Preloader onComplete={() => setIsPreloaderDone(true)} />
+    <SmoothScroll>
+      <div className="relative min-h-screen flex flex-col bg-[#08090D] overflow-x-hidden selection:bg-cyan-500/25 selection:text-cyan-300">
+        {/* Seamless Dynamic Ambient Background */}
+        <DynamicAmbientBackground />
 
-      {/* Non-flat reactive ambient canvas background */}
-      <AmbientBackground />
+        {/* Global Navigation Bar */}
+        <Navbar
+          onOpenProspectus={() => setProspectusOpen(true)}
+          onOpenPitch={() => setPitchOpen(true)}
+        />
 
-      {/* Brand custom cursor with yin-yang orbital swoosh follower */}
-      <CustomCursor />
+        {/* Main Content Area */}
+        <main className="flex-1 relative z-10">{children}</main>
 
-      {/* Persistent Shell Layout */}
-      <div className="relative min-h-screen flex flex-col z-10 selection:bg-[#8E1624] selection:text-white">
-        <Navbar />
-
-        {/* Animated Page Transition Container */}
-        <main className="flex-1 w-full relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -16, filter: "blur(4px)" }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full"
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
-        </main>
-
+        {/* Global Footer */}
         <Footer />
+
+        {/* Global Interactive Modals */}
+        <ProspectusModal isOpen={prospectusOpen} onClose={() => setProspectusOpen(false)} />
+        <PitchModal isOpen={pitchOpen} onClose={() => setPitchOpen(false)} />
       </div>
-    </>
+    </SmoothScroll>
   );
 }

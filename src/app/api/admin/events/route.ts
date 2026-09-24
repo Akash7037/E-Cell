@@ -20,11 +20,11 @@ export async function POST(req: Request) {
     const newEvent = saveEvent({
       id: `evt-${Date.now()}`,
       title,
-      subtitle: subtitle || "VSBCETC Innovation Initiative",
+      subtitle: subtitle || "ECellCETC Innovation Initiative",
       category: data.category || "Workshop",
       date: data.date || new Date().toISOString().split("T")[0],
       time: data.time || "10:00 AM IST",
-      venue: sanitizeInput(data.venue) || "Innovation Hub, VSBCETC",
+      venue: sanitizeInput(data.venue) || "Innovation Hub, ECellCETC",
       isSpotlight: Boolean(data.isSpotlight),
       status: data.status || "Upcoming",
       description,
