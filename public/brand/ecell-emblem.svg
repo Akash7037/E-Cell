@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none">
+  <!-- Outer orbital ring subtle glow -->
+  <circle cx="250" cy="250" r="236" stroke="currentColor" stroke-width="3" opacity="0.3" stroke-dasharray="12 8" />
+  
+  <!-- Main silhouette container circle -->
+  <circle cx="250" cy="250" r="220" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-width="4" />
+  
+  <!-- Upper Sweeping Protective Hand / Wing (Yin flow) -->
+  <path d="M 90 230 C 95 160 150 95 240 85 C 325 75 390 120 405 160 C 375 165 350 155 330 148 C 290 135 220 145 170 195 C 150 215 125 228 90 230 Z" fill="currentColor" />
+  <path d="M 120 180 C 175 120 270 110 350 140 C 370 148 400 162 415 162 C 400 178 375 185 340 182 C 280 178 200 210 145 255 C 105 290 85 305 85 305 C 80 270 95 220 120 180 Z" fill="currentColor" />
+
+  <!-- Lower Sweeping Protective Hand / Wing (Yang flow) -->
+  <path d="M 410 270 C 405 340 350 405 260 415 C 175 425 110 380 95 340 C 125 335 150 345 170 352 C 210 365 280 355 330 305 C 350 285 375 272 410 270 Z" fill="currentColor" />
+  <path d="M 380 320 C 325 380 230 390 150 360 C 130 352 100 338 85 338 C 100 322 125 315 160 318 C 220 322 300 290 355 245 C 395 210 415 195 415 195 C 420 230 405 280 380 320 Z" fill="currentColor" />
+
+  <!-- Central Graduation Cap (Mortarboard & Tassel) -->
+  <g class="mortarboard">
+    <!-- Diamond Top Cap -->
+    <polygon points="250,210 305,228 250,246 195,228" fill="#D4AF37" stroke="currentColor" stroke-width="2" />
+    <!-- Skull Cap Base Underneath -->
+    <path d="M 215 235 C 215 252 285 252 285 235 L 285 242 C 285 258 215 258 215 242 Z" fill="#9E1B28" stroke="currentColor" stroke-width="1.5" />
+    <!-- Dangling Tassel -->
+    <path d="M 250 228 L 290 238 L 290 262" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" fill="none" />
+    <circle cx="290" cy="264" r="3.5" fill="#F59E0B" />
+  </g>
+</svg>
